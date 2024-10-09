@@ -34,5 +34,22 @@ let person2: Person = {
 let people: Person[] = [person, person2];
 console.log(people);
 
-let myName = "jon";
-const myName2 = "jon";
+type UserRole = "guest" | "admin" | "user";
+let userRoler: UserRole = "guest";
+
+type User = {
+  userName: string;
+  role: UserRole;
+};
+const users: User[] = [
+  { userName: "jon doe", role: "admin" },
+  { userName: "guest_user", role: "guest" },
+  { userName: "jane doe", role: "admin" },
+];
+const fetchUserWithDetails = (username: string): User => {
+  const user = users.find((u) => u.userName === username);
+  if (!user) {
+    throw new Error(`User with ${username} cannot be found`);
+  }
+  return user;
+};
