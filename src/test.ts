@@ -32,24 +32,59 @@ let person2: Person = {
 };
 
 let people: Person[] = [person, person2];
-console.log(people);
-
-type UserRole = "guest" | "admin" | "user";
-let userRoler: UserRole = "guest";
+// console.log(people);
 
 type User = {
-  userName: string;
-  role: UserRole;
+  id: number;
+  username: string;
+  role: "member" | "contributor" | "admin";
 };
+
+type UpdateType = Partial<User>;
 const users: User[] = [
-  { userName: "jon doe", role: "admin" },
-  { userName: "guest_user", role: "guest" },
-  { userName: "jane doe", role: "admin" },
+  { id: 1, username: "john_doe", role: "member" },
+  { id: 2, username: "jane_smith", role: "contributor" },
+  { id: 3, username: "alice_jones", role: "admin" },
+  { id: 4, username: "charlie_brown", role: "member" },
 ];
-const fetchUserWithDetails = (username: string): User => {
-  const user = users.find((u) => u.userName === username);
-  if (!user) {
-    throw new Error(`User with ${username} cannot be found`);
+let nextUserID = 1;
+
+function updateUser(id: number, updates: UpdateType) {
+  let foundUser = users.find((user) => user.id === id);
+  if (!foundUser) {
+    console.error("User not found!");
+    return;
   }
+  //   let updatedUser = { ...user, ...updates };
+  Object.assign(foundUser, updates);
+}
+function addNewUser(newUser: Omit<User, "id">): User {
+  let user: User = { ...newUser, id: nextUserID++ };
+  users.push(user);
   return user;
-};
+}
+addNewUser({ username: "joe_schmoe", role: "member" });
+console.log(users);
+
+// generics
+
+const gameScores: number[] = [14, 21, 33, 42, 59];
+const favoriteThings: string[] = [
+  "raindrops on roses",
+  "whiskers on kittens",
+  "bright copper kettles",
+  "warm woolen mittens",
+];
+const voters: { name: string; age: number }[] = [
+  { name: "Alice", age: 42 },
+  { name: "Bob", age: 77 },
+];
+
+function getLastItem<PlaceHolderType>(
+  array: PlaceHolderType[]
+): PlaceHolderType {
+  return array[array.length - 1];
+}
+console.log(`last game score is`, getLastItem(gameScores));
+console.log(`last favorite thing is`, getLastItem(favoriteThings));
+console.log(`last voter is`, getLastItem(voters));
